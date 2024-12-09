@@ -1,6 +1,7 @@
 import { Roboto } from "next/font/google";
 import "./globals.css";
 import { AuthContextProvider, useAuthContext } from "./context/AuthContext";
+import DrawerMenu from "./components/ui/DrawerMenu";
 
 const roboto = Roboto({
   subsets: ["latin"],

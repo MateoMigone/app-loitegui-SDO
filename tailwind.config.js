@@ -11,6 +11,8 @@ export const theme = {
       foreground: "var(--foreground)",
       "main-gray": "#1E1E1E",
       "main-green": "#4A8073",
+      "main-red": "#b82e30",
+      "main-brown": "#A09489",
     },
   },
 };
