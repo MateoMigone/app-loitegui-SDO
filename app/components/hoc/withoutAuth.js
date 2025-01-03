@@ -5,7 +5,7 @@ import { useAuthContext } from "../../context/AuthContext"; // Adjust the path a
 import Spinner from "../ui/Spinner";
 
 const withoutAuth = (WrappedComponent) => {
-  return (props) => {
+  const ComponentWithoutAuth = (props) => {
     const router = useRouter();
     const { loading, isAuthenticated } = useAuthContext(); // Assume your auth context provides these
 
@@ -24,6 +24,13 @@ const withoutAuth = (WrappedComponent) => {
     // Return the wrapped component with all props passed down
     return <WrappedComponent {...props} />;
   };
+
+  // Assign a meaningful displayName for easier debugging
+  ComponentWithoutAuth.displayName = `WithoutAuth(${
+    WrappedComponent.displayName || WrappedComponent.name || "Component"
+  })`;
+
+  return ComponentWithoutAuth;
 };
 
 export default withoutAuth;

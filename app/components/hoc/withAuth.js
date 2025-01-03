@@ -5,7 +5,7 @@ import { useAuthContext } from "../../context/AuthContext"; // Adjust the path a
 import Spinner from "../ui/Spinner";
 
 const withAuth = (WrappedComponent) => {
-  return (props) => {
+  const ComponentWithAuth = (props) => {
     const router = useRouter();
     const { loading, isAuthenticated, currentUser } = useAuthContext(); // Assume your auth context provides these
 
@@ -35,6 +35,13 @@ const withAuth = (WrappedComponent) => {
     // Return the wrapped component with all props passed down
     return <WrappedComponent {...props} />;
   };
+
+  // Assign a meaningful displayName for easier debugging
+  ComponentWithAuth.displayName = `WithAuth(${
+    WrappedComponent.displayName || WrappedComponent.name || "Component"
+  })`;
+
+  return ComponentWithAuth;
 };
 
 export default withAuth;
