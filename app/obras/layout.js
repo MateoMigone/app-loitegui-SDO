@@ -1,10 +1,11 @@
 import Header from "../components/ui/Header";
+import { ObraContextProvider } from "../context/ObraContext";
 
 export default function Layout({ children }) {
   return (
     <section>
       <Header />
-      {children}
+      <ObraContextProvider>{children}</ObraContextProvider>
     </section>
   );
 }

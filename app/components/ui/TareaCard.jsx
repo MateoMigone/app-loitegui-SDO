@@ -3,9 +3,21 @@ import { fetchComentarios } from "../../lib/comentarios";
 const TareaCard = ({ tarea, setCurrentTarea, setLoading, setComentarios }) => {
   const handleClick = async () => {
     setLoading(true);
-    setCurrentTarea(tarea.title);
+    localStorage.setItem(
+      "currentTarea",
+      JSON.stringify({
+        tareaId: tarea.id,
+        tareaName: tarea.title,
+        finished: tarea.finished,
+      })
+    );
+    setCurrentTarea({
+      tareaId: tarea.id,
+      tareaName: tarea.title,
+      finished: tarea.finished,
+    });
     const dataComentarios = await fetchComentarios(tarea.id);
-    console.log("aa: " + dataComentarios);
+    console.log(dataComentarios);
 
     setComentarios(dataComentarios);
     setLoading(false);

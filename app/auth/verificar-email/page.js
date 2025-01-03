@@ -30,7 +30,9 @@ function VerifyEmail() {
 
   useEffect(() => {
     if (!currentUser) {
-      router.replace("/auth/login");
+      setTimeout(() => {
+        router.replace("/auth/login");
+      }, 3000);
     }
   });
 

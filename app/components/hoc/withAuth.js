@@ -7,7 +7,7 @@ import Spinner from "../ui/Spinner";
 const withAuth = (WrappedComponent) => {
   return (props) => {
     const router = useRouter();
-    const { loading, isAuthenticated } = useAuthContext(); // Assume your auth context provides these
+    const { loading, isAuthenticated, currentUser } = useAuthContext(); // Assume your auth context provides these
 
     useEffect(() => {
       if (!loading) {
@@ -20,6 +20,17 @@ const withAuth = (WrappedComponent) => {
     if (loading || !isAuthenticated) {
       return <Spinner />;
     }
+
+    if (!currentUser.reading)
+      return (
+        <div className="w-[80%] mx-auto my-12 flex flex-col items-center p-4 bg-white border-[1px] border-[#CDCCCA] shadow rounded">
+          <i className="bi bi-info-circle-fill text-[80px] text-[#3498db]"></i>
+          <p className="text-[18px] text-medium text-center">
+            Para acceder a la aplicación debes solicitar los permisos
+            correspondientes al administrador.
+          </p>
+        </div>
+      );
 
     // Return the wrapped component with all props passed down
     return <WrappedComponent {...props} />;

@@ -1,10 +1,12 @@
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
+import { useObraContext } from "../../context/ObraContext";
 
-const RecursiveStructure = ({ level }) => {
+const RecursiveStructure = ({ level, index }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [currentLevel, setCurrentLevel] = useState({});
   const [selected, setSelected] = useState("");
+  const { setCurrentPath, currentPath } = useObraContext();
   const router = useRouter();
 
   useEffect(() => {
@@ -13,7 +15,18 @@ const RecursiveStructure = ({ level }) => {
     setSelected("");
   }, [level]);
 
-  const handleClick = (new_level, new_level_id) => {
+  const assemblePath = (name) => {
+    if (!selected) {
+      setCurrentPath(currentPath + " > " + name);
+    } else {
+      const pathArr = currentPath.split(" > ");
+      const newPathArr = [...pathArr.slice(0, 2 + index), name];
+      setCurrentPath(newPathArr.join(" > "));
+    }
+  };
+
+  const handleClick = (new_level, new_level_id, new_level_name) => {
+    assemblePath(new_level_name);
     setSelected(new_level_id);
     if (new_level) {
       setIsOpen(true); // Toggle visibility of children
@@ -37,14 +50,16 @@ const RecursiveStructure = ({ level }) => {
                   ? "bg-[#34312E] text-white"
                   : "bg-white text-main-gray"
               }`}
-              onClick={() => handleClick(sub_lev.structure, sub_lev.level_id)}
+              onClick={() =>
+                handleClick(sub_lev.structure, sub_lev.level_id, sub_lev.name)
+              }
             >
               {sub_lev.name}
             </button>
           </li>
         ))}
       </ul>
-      {isOpen && <RecursiveStructure level={currentLevel} />}
+      {isOpen && <RecursiveStructure level={currentLevel} index={index + 1} />}
     </div>
   );
 };

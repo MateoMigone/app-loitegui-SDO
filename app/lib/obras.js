@@ -1,36 +1,53 @@
-import { db } from "../../firebaseConfig.mjs";
-import { collection, getDocs, doc, getDoc } from "firebase/firestore";
+import { getAuth } from "firebase/auth";
 
-// Function for getting all obras
 export const fetchObras = async () => {
-  // Fetching all data from "obras"
-  const querySnapshot = await getDocs(collection(db, "obras"));
-  // Structuring the data
-  const data = querySnapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
+  try {
+    const auth = getAuth();
+    const token = await auth.currentUser.getIdToken();
 
-  return data;
+    const response = await fetch("https://getobras-efud7l6bbq-uc.a.run.app", {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    if (!response.ok) {
+      throw new Error("Failed to fetch data");
+    }
+
+    return await response.json();
+  } catch (error) {
+    console.error("Error fetching data:", error);
+  }
 };
 
 // Function for getting obra by id
-export const getObraById = async (docId) => {
-  // Reference for a doc from the "obras" collection
-  const docRef = doc(db, "obras", docId);
-
+export const getObraById = async (obraId) => {
   try {
-    // Fetching referenced doc
-    const docSnap = await getDoc(docRef);
-    // Checking if doc was found
-    if (docSnap.exists()) {
-      console.log("Document data:", docSnap.data());
-      // Return the data
-      return docSnap.data();
-    } else {
-      console.log("No such document!");
-      // Return null if no doc was found
-      return null;
+    const auth = getAuth();
+    const token = await auth.currentUser.getIdToken();
+
+    const response = await fetch(
+      `https://getobrabyid-efud7l6bbq-uc.a.run.app?id=${obraId}`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+
+    if (!response.ok) {
+      throw new Error(`HTTP Error: ${response.status}`);
     }
+
+    const data = await response.json();
+    console.log("Obra:", data);
+    return data;
   } catch (error) {
-    // Logging error message
-    console.error("Error getting document:", error);
+    console.error("Error fetching obra:", error);
+    return null;
   }
 };

@@ -67,7 +67,7 @@ function Register() {
 
     if (Object.keys(validationErrors).length === 0) {
       try {
-        await createUser(email, password);
+        await createUser(name, email, password);
         setErrors({});
       } catch (error) {
         if (error.code === "auth/email-already-in-use") {
@@ -79,7 +79,7 @@ function Register() {
   return (
     <div className="grid grid-rows-[150px_1fr] items-center justify-items-center min-h-screen pb-20 font-[family-name:var(--font-geist-sans)]">
       <div className="flex w-full flex-col items-center">
-        <Link href={"/login"} className="mr-auto ml-3">
+        <Link href={"/auth/login"} className="mr-auto ml-3">
           <i className="bi bi-arrow-left-short text-[50px]"></i>
         </Link>
         <h2 className="text-4xl font-bold text-main-gray">Registrarse</h2>

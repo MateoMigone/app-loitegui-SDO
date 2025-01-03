@@ -11,6 +11,7 @@ import {
 } from "firebase/auth";
 import Toastify from "toastify-js";
 import { useRouter } from "next/navigation";
+import { createUsuarioDoc, fetchUser } from "../lib/usuarios";
 
 const AuthContext = createContext();
 
@@ -22,13 +23,16 @@ export function AuthContextProvider({ children }) {
 
   useEffect(() => {
     // Listener for changes in the state of the auth
-    const removeListener = onAuthStateChanged(auth, (user) => {
-      setCurrentUser(user);
+    const removeListener = onAuthStateChanged(auth, async (user) => {
+      const userInfo = user ? await fetchUser() : null;
+      setCurrentUser(userInfo);
+      console.log("userInfoContext: ", userInfo);
+
       user && user.emailVerified
         ? setIsAuthenticated(true)
         : setIsAuthenticated(false);
+
       setLoading(false);
-      console.log(user);
     });
 
     return removeListener; // Removing the listener onAuthStateChange on component unmount
@@ -65,13 +69,20 @@ export function AuthContextProvider({ children }) {
   };
 
   // Create user function
-  const createUser = async (email, password) => {
+  const createUser = async (name, email, password) => {
     // Using firebase function to create user with email and password
     await createUserWithEmailAndPassword(auth, email, password);
     console.log("new account created");
 
+    const body = { uid: auth.currentUser.uid, email, name };
+
+    // Function that calls api for creating user doc
+    createUsuarioDoc(body);
+
     // Using firebase function to send email verification
     sendEmailVerification(auth.currentUser);
+
+    router.replace("/auth/verificar-email");
 
     // Show toast for successfull user creation
     Toastify({

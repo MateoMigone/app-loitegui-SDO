@@ -44,18 +44,22 @@ const DrawerMenu = () => {
           </button>
         </div>
         <ul className="text-white mt-5">
+          {currentUser?.admin && (
+            <li>
+              <Link
+                onClick={closeDrawer}
+                href="/admin"
+                className={`block px-6 py-4 flex gap-4 items-center text-[22px] ${
+                  pathname.startsWith("/admin") && "bg-[#34312E]"
+                }`}
+              >
+                <i className="bi bi-person-fill-gear"></i> <span>Admin</span>
+              </Link>
+            </li>
+          )}
           <li>
             <Link
-              href="/admin"
-              className={`block px-6 py-4 flex gap-4 items-center text-[22px] ${
-                pathname.startsWith("/admin") && "bg-[#34312E]"
-              }`}
-            >
-              <i className="bi bi-person-fill-gear"></i> <span>Admin</span>
-            </Link>
-          </li>
-          <li>
-            <Link
+              onClick={closeDrawer}
               href="/obras"
               className={`block px-6 py-4 flex gap-4 items-center text-[22px] ${
                 pathname.startsWith("/obras") && "bg-[#34312E]"
@@ -68,7 +72,7 @@ const DrawerMenu = () => {
         <div className="flex flex-col items-center">
           <p className="text-white flex gap-2">
             <i className="bi bi-person-fill"></i>
-            <span>{currentUser?.email}</span>
+            <span>{currentUser?.name}</span>
           </p>
           <div className="w-[70%]">
             <Button

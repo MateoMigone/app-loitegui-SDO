@@ -10,7 +10,7 @@ const Button = ({ text, color, onClick, children }) => {
       {children}
       <span
         className={`${
-          children ? "tracking-wider font-light mb-0.5" : "py-2.5"
+          children ? "tracking-wider font-light mb-0.5 text-[15px]" : "py-2.5"
         }`}
       >
         {text}
